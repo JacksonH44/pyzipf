@@ -2,9 +2,11 @@
 
 import argparse
 
+import matplotlib as mpl
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize_scalar
+import yaml
 
 
 def nlog_likelihood(beta, counts):
@@ -36,6 +38,18 @@ def get_power_law_params(word_counts):
     beta = mle.x
     alpha = 1 / (beta - 1)
     return alpha
+
+
+def set_plot_params(param_file):
+    """Set the matplotlib parameters."""
+    if param_file:
+        with open(param_file, 'r') as reader:
+            param_dict = yaml.load(reader, 
+                                   Loader=yaml.BaseLoader)
+    else:
+        param_dict = {}
+    for param, value in param_dict.items():
+        mpl.rcParams[param] = value
 
 
 def plot_fit(curve_xmin, curve_xmax, max_rank, alpha, ax):
@@ -100,5 +114,7 @@ if __name__ == '__main__':
     parser.add_argument('--xlim', type=float, nargs=2,
                         metavar=('XMIN', 'XMAX'),
                         default=None, help='X-axis limits')
+    parser.add_argument('--plotparams', type=str, default=None,
+                        help='matplotlib parameters (YAML file)')
     args = parser.parse_args()
     main(args)
