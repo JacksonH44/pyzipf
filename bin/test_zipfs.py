@@ -8,11 +8,18 @@ import plotcounts
 import collate
 
 
+def test_filenotfounderror_handling():
+    """Error handling test for a file that doesn't exist."""
+    word_counts = Counter()
+    with pytest.raises(FileNotFoundError):
+        actual = collate.process_file('data/nonexistent.csv', word_counts)
+
+
 def test_oserror_handling():
     """Error handling test for a file that doesn't end in '.csv'."""
-    expected_result = Counter()
+    word_counts = Counter()
     with pytest.raises(OSError):
-        actual = collate.process_file('data/test.txt', expected_result)
+        actual = collate.process_file('data/dracula.txt', word_counts)
 
 
 def test_regression():
@@ -23,6 +30,7 @@ def test_regression():
     actual_alpha = plotcounts.get_power_law_params(counts_array)
     expected_alpha = pytest.approx(1.087, abs=0.001)
     assert actual_alpha == expected_alpha
+    
 
 def test_integration():
     """Test the full word count to alpha parameter workflow."""
@@ -52,6 +60,7 @@ def test_alpha():
     actual_alpha = plotcounts.get_power_law_params(counts)
     expected_alpha = pytest.approx(1.0, abs=0.01)
     assert actual_alpha == expected_alpha
+    
 
 def test_word_count():
     """Test the counting of words.
