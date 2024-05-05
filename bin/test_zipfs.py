@@ -76,3 +76,4 @@ def test_word_count():
     with open('test_data/risk.txt', 'r') as reader:
         actual_result = countwords.count_words(reader)
     assert actual_result == expected_result
+    
