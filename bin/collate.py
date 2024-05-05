@@ -20,6 +20,17 @@ def update_counts(reader, word_counts):
     """Update word counts with data from another reader/file."""
     for word, count in csv.reader(reader):
         word_counts[word] += int(count)
+        
+        
+def process_file(fname, word_counts):
+    """Read file and update word counts."""
+    logging.debug(f'Reading in {fname}...')
+    if fname[-4:] != '.csv':
+        msg = ERRORS['not_csv_suffix'].format(fname=fname)
+        raise OSError(msg)
+    with open(fname, 'r') as reader:
+        logging.debug('Computing word counts...')
+        update_counts(reader, word_counts)
 
 
 def main(args):
@@ -31,13 +42,7 @@ def main(args):
     logging.info('Processing files...')
     for fname in args.infiles:
         try:
-            logging.debug(f'Reading in {fname}...')
-            if fname[-4:] != '.csv':
-                msg = ERRORS['not_csv_suffix'].format(fname=fname)
-                raise OSError(msg)
-            with open(fname, 'r') as reader:
-                logging.debug('Computing word counts...')
-                update_counts(reader, word_counts)
+            process_file(fname, word_counts)
         except FileNotFoundError:
             msg = f'{fname} not processed: File does not exist'
             logging.warning(msg)

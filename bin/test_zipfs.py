@@ -5,6 +5,14 @@ import pytest
 
 import countwords
 import plotcounts
+import collate
+
+
+def test_oserror_handling():
+    """Error handling test for a file that doesn't end in '.csv'."""
+    expected_result = Counter()
+    with pytest.raises(OSError):
+        actual = collate.process_file('data/test.txt', expected_result)
 
 
 def test_regression():
