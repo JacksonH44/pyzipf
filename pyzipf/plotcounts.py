@@ -76,8 +76,27 @@ def plot_fit(curve_xmin, curve_xmax, max_rank, alpha, ax):
     ax.loglog(xvals, yvals, color='grey')
 
 
-def main(args):
+def parse_command_line():
+    """Parse the command line for input arguments."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('infile', type=argparse.FileType('r'),
+                        nargs='?', default='-',
+                        help='Word count csv file name')
+    parser.add_argument('--outfile', type=str,
+                        default='plotcounts.png',
+                        help='Output image file name')
+    parser.add_argument('--xlim', type=float, nargs=2,
+                        metavar=('XMIN', 'XMAX'),
+                        default=None, help='X-axis limits')
+    parser.add_argument('--plotparams', type=str, default=None,
+                        help='matplotlib parameters (YAML file)')
+    args = parser.parse_args()
+    return args
+
+
+def main():
     """Run the command line program."""
+    args = parse_command_line()
     df = pd.read_csv(args.infile, header=None,
                      names=('word', 'word_frequency'))
     df['rank'] = df['word_frequency'].rank(ascending=False,
@@ -106,18 +125,5 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('infile', type=argparse.FileType('r'),
-                        nargs='?', default='-',
-                        help='Word count csv file name')
-    parser.add_argument('--outfile', type=str,
-                        default='plotcounts.png',
-                        help='Output image file name')
-    parser.add_argument('--xlim', type=float, nargs=2,
-                        metavar=('XMIN', 'XMAX'),
-                        default=None, help='X-axis limits')
-    parser.add_argument('--plotparams', type=str, default=None,
-                        help='matplotlib parameters (YAML file)')
-    args = parser.parse_args()
-    main(args)
+    main()
     
