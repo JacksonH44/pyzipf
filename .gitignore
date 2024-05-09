@@ -1,5 +1,6 @@
-__pycache__
+__pycache__/
 .coverage
-htmlcov
+htmlcov/
 pyzipf.egg-info
-dist
+dist/
+docs/_build/
